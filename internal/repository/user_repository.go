@@ -2,6 +2,9 @@ package repository
 
 import (
 	"context"
+	"reflect"
+
+	q "github.com/core-go/sql"
 	"gorm.io/gorm"
 
 	. "go-service/internal/model"
@@ -47,8 +50,11 @@ func (r *userRepository) Update(ctx context.Context, user *User) (int64, error) 
 }
 
 func (r *userRepository) Patch(ctx context.Context, user map[string]interface{}) (int64, error) {
+	userType := reflect.TypeOf(User{})
+	jsonColumnMap := q.MakeJsonColumnMap(userType)
+	colMap := q.JSONToColumns(user, jsonColumnMap)
 	var userModel User
-	res := r.DB.Model(&userModel).Where("id = ?", user["id"]).Updates(user)
+	res := r.DB.Model(&userModel).Where("id = ?", user["id"]).Updates(colMap)
 	return res.RowsAffected, nil
 }
 
