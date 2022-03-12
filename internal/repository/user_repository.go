@@ -2,10 +2,9 @@ package repository
 
 import (
 	"context"
-	"reflect"
-
 	q "github.com/core-go/sql"
 	"gorm.io/gorm"
+	"reflect"
 
 	. "go-service/internal/model"
 )
@@ -19,8 +18,8 @@ type UserRepository interface {
 	Delete(ctx context.Context, id string) (int64, error)
 }
 
-func NewUserRepository(gormDb *gorm.DB) UserRepository {
-	return &userRepository{DB: gormDb}
+func NewUserRepository(db *gorm.DB) UserRepository {
+	return &userRepository{DB: db}
 }
 
 type userRepository struct {

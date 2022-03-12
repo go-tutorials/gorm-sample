@@ -1,4 +1,4 @@
-# gorm-tutorial
+# gorm-layer-architecture-sample
 
 #### To run the application
 ```shell
