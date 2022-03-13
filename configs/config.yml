@@ -1,5 +1,5 @@
 server:
-  name: gorm-tutorial
+  name: gorm-layer-architecture-sample
   port: 8080
 
 sql:
