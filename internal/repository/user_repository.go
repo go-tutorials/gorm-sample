@@ -44,7 +44,7 @@ func (r *userRepository) Create(ctx context.Context, user *User) (int64, error) 
 }
 
 func (r *userRepository) Update(ctx context.Context, user *User) (int64, error) {
-	res := r.DB.Model(&user).Updates(User{Username: user.Username, Email: user.Email, Phone: user.Phone, DateOfBirth: user.DateOfBirth})
+	res := r.DB.Save(&user)
 	return res.RowsAffected, nil
 }
 
