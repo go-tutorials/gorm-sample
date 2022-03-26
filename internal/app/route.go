@@ -11,7 +11,6 @@ func Route(r *mux.Router, ctx context.Context, conf Config) error {
 	if err != nil {
 		return err
 	}
-
 	r.HandleFunc("/health", app.Health.Check).Methods(GET)
 
 	user := "/users"

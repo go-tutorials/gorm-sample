@@ -34,7 +34,7 @@ func main() {
 	}
 	fmt.Println(sv.ServerInfo(conf.Server))
 	server := sv.CreateServer(conf.Server, r)
-	if err := server.ListenAndServe(); err != nil {
+	if err = server.ListenAndServe(); err != nil {
 		fmt.Println(err.Error())
 	}
 }
