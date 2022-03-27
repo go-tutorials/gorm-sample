@@ -37,14 +37,13 @@ type userHandler struct {
 }
 
 func (h *userHandler) All(w http.ResponseWriter, r *http.Request) {
-	res, err := h.service.All(r.Context())
+	users, err := h.service.All(r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	JSON(w, http.StatusOK, res)
+	JSON(w, http.StatusOK, users)
 }
-
 func (h *userHandler) Load(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	if len(id) == 0 {
@@ -52,12 +51,12 @@ func (h *userHandler) Load(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := h.service.Load(r.Context(), id)
+	user, err := h.service.Load(r.Context(), id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	JSON(w, http.StatusOK, res)
+	JSON(w, http.StatusOK, user)
 }
 func (h *userHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var user User

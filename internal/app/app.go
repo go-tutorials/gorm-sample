@@ -23,24 +23,23 @@ type ApplicationContext struct {
 }
 
 func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
-	gormDB, err := gorm.Open(g.Open(conf.Sql.DataSourceName), &gorm.Config{})
+	ormDB, err := gorm.Open(g.Open(conf.Sql.DataSourceName), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
-	gormDB.AutoMigrate(&User{})
-	db, err := gormDB.DB()
+	ormDB.AutoMigrate(&User{})
+	db, err := ormDB.DB()
 	if err != nil {
 		return nil, err
 	}
 
 	userType := reflect.TypeOf(User{})
-	userQueryBuilder := query.NewBuilder(db, "users", userType)
-	userSearchBuilder, err := q.NewSearchBuilder(db, userType, userQueryBuilder.BuildQuery)
+	userQuery := query.UseQuery(db, "users", userType)
+	userSearchBuilder, err := q.NewSearchBuilder(db, userType, userQuery)
 	if err != nil {
 		return nil, err
 	}
-
-	userRepository := NewUserRepository(gormDB)
+	userRepository := NewUserRepository(ormDB)
 	userService := NewUserService(userRepository)
 	userHandler := NewUserHandler(userSearchBuilder.Search, userService, log.ErrorMsg)
 
