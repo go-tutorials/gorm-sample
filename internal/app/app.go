@@ -41,7 +41,7 @@ func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
 	}
 	userRepository := NewUserRepository(ormDB)
 	userService := NewUserService(userRepository)
-	userHandler := NewUserHandler(userSearchBuilder.Search, userService, log.ErrorMsg)
+	userHandler := NewUserHandler(userSearchBuilder.Search, userService, log.LogError)
 
 	sqlChecker := q.NewHealthChecker(db)
 	healthHandler := health.NewHandler(sqlChecker)

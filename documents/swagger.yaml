@@ -1,0 +1,344 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is a sample User Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io).
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Find out more about user
+      url: http://swagger.io
+paths:
+  /users:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: Create a new user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: 'return integer. 1: success'
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Invalid user supplied
+        '500':
+          description: Internal Server Error
+  /users/{userId}:
+    get:
+      tags:
+        - user
+      summary: Get user by user ID
+      description: 'Get a user by ID'
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: 'The userId that needs to be fetched. Use spiderman for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid userId supplied
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: Update a user.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: user that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 'return integer. 1: success'
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found. Return 0
+          content:
+            application/json:
+              schema:
+                type: integer
+        '500':
+          description: Internal Server Error
+    patch:
+      tags:
+        - user
+      summary: Update user
+      description: Perform a partial update of a user.
+      operationId: patchUser
+      parameters:
+        - name: userId
+          in: path
+          description: user that need to be update partially
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: a partial user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 'return integer. 1: success'
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found. Return 0
+          content:
+            application/json:
+              schema:
+                type: integer
+        '500':
+          description: Internal Server Error
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: Delete a user by ID.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: The userId that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'return integer. 1: success'
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Invalid userId supplied
+        '404':
+          description: User not found. Return 0
+          content:
+            application/json:
+              schema:
+                type: integer
+        '500':
+          description: Internal Server Error
+  /users/search:
+    get:
+      tags:
+        - user
+      summary: Search users by userId or username or email or phone or min of  dateOfBirth or max of  dateOfBirth
+      description: 'Get a user by ID'
+      operationId: serachUsers
+      parameters:
+        - name: page
+          in: query
+          description: 'The page index'
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: 'The max of numbers of users'
+          schema:
+            type: integer
+            example: 120
+        - name: fields
+          in: query
+          description: 'The return fields. For example, fields=username,email => return 2 fields: username and email'
+          schema:
+            type: string
+            example: phone,-id
+        - name: userId
+          in: query
+          description: 'The userId that needs to be fetched'
+          schema:
+            type: string
+            example: wolverine
+        - name: username
+          in: query
+          description: 'The username that needs to be fetched'
+          schema:
+            type: string
+            example: james.howlett
+        - name: email
+          in: query
+          description: 'The email that needs to be fetched'
+          schema:
+            type: string
+            example: james.howlett@gmail.com
+        - name: phone
+          in: query
+          description: 'The phone that needs to be fetched'
+          schema:
+            type: string
+            example: 0987654321
+        - name: dateOfBirth.min
+          in: query
+          description: 'The min of dateOfBirth that needs to be fetched'
+          schema:
+            type: string
+            format: date-time
+            example: 1953-11-16T00:00:00+07:00
+        - name: dateOfBirth.max
+          in: query
+          description: 'The max of dateOfBirth that needs to be fetched'
+          schema:
+            type: string
+            format: date-time
+            example: 1976-11-16T00:00:00+07:00
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSearchResponse'
+        '400':
+          description: Invalid parameters supplied
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - user
+      summary: search users by POST
+      description: search users by POST
+      operationId: searchUserByPost
+      requestBody:
+        description: Search users by POST
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFilter'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSearchResponse'
+        '400':
+          description: Invalid UserFilter supplied
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    TimeRange:
+      type: object
+      properties:
+        min:
+          type: string
+          format: 'date-time'
+          example: '1974-11-16T00:00:00+07:00'
+        max:
+          type: string
+          format: 'date-time'
+          example: '1975-11-16T00:00:00+07:00'
+    User:
+      type: object
+      required:
+        - username
+        - phone
+      properties:
+        id:
+          type: string
+          example: 'wolverine'
+        username:
+          type: string
+          example: 'james.howlett'
+        email:
+          type: string
+          example: 'james.howlett@gmail.com'
+        phone:
+          type: string
+          example: '0987654321'
+        dateOfBirth:
+          type: string
+          format: 'date-time'
+          example: '1974-11-16T00:00:00+07:00'
+    UserFilter:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 'Page index'
+          example: 1
+        limit:
+          type: integer
+          description: 'Maximum of numbers of users'
+          example: 20
+        id:
+          type: string
+          example: 'wolverine'
+        username:
+          type: string
+          example: 'james.howlett'
+        email:
+          type: string
+          example: 'james.howlett@gmail.com'
+        phone:
+          type: string
+          example: '0987654321'
+        dateOfBirth:
+          $ref: '#/components/schemas/TimeRange'
+    UserSearchResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 120
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'

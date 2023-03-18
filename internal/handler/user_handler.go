@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/core-go/core"
 	"github.com/core-go/search"
-	sv "github.com/core-go/service"
 	"github.com/gorilla/mux"
 	"net/http"
 	"reflect"
@@ -24,7 +24,7 @@ type UserHandler interface {
 	Delete(w http.ResponseWriter, r *http.Request)
 }
 
-func NewUserHandler(find func(context.Context, interface{}, interface{}, int64, ...int64) (int64, string, error), service UserService, logError func(context.Context, string)) UserHandler {
+func NewUserHandler(find func(context.Context, interface{}, interface{}, int64, ...int64) (int64, string, error), service UserService, logError func(context.Context, string, ...map[string]interface{})) UserHandler {
 	filterType := reflect.TypeOf(UserFilter{})
 	modelType := reflect.TypeOf(User{})
 	searchHandler := search.NewSearchHandler(find, modelType, filterType, logError, nil)
@@ -110,8 +110,8 @@ func (h *userHandler) Patch(w http.ResponseWriter, r *http.Request) {
 
 	var user User
 	userType := reflect.TypeOf(user)
-	_, jsonMap, _ := sv.BuildMapField(userType)
-	body, er1 := sv.BuildMapAndStruct(r, &user)
+	_, jsonMap, _ := core.BuildMapField(userType)
+	body, er1 := core.BuildMapAndStruct(r, &user)
 	if er1 != nil {
 		http.Error(w, er1.Error(), http.StatusInternalServerError)
 		return
@@ -122,7 +122,7 @@ func (h *userHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Id not match", http.StatusBadRequest)
 		return
 	}
-	json, er2 := sv.BodyToJsonMap(r, user, body, []string{"id"}, jsonMap)
+	json, er2 := core.BodyToJsonMap(r, user, body, []string{"id"}, jsonMap)
 	if er2 != nil {
 		http.Error(w, er2.Error(), http.StatusInternalServerError)
 		return
