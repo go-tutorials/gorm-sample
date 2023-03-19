@@ -18,37 +18,37 @@ type UserRepository interface {
 	Delete(ctx context.Context, id string) (int64, error)
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
-	return &userRepository{DB: db}
+func NewUserAdapter(db *gorm.DB) UserRepository {
+	return &UserAdapter{DB: db}
 }
 
-type userRepository struct {
+type UserAdapter struct {
 	DB *gorm.DB
 }
 
-func (r *userRepository) All(ctx context.Context) (*[]User, error) {
+func (r *UserAdapter) All(ctx context.Context) (*[]User, error) {
 	var users *[]User
 	_ = r.DB.Find(&users)
 	return users, nil
 }
 
-func (r *userRepository) Load(ctx context.Context, id string) (*User, error) {
+func (r *UserAdapter) Load(ctx context.Context, id string) (*User, error) {
 	var user User
 	r.DB.First(&user, "id = ?", id)
 	return &user, nil
 }
 
-func (r *userRepository) Create(ctx context.Context, user *User) (int64, error) {
+func (r *UserAdapter) Create(ctx context.Context, user *User) (int64, error) {
 	res := r.DB.Create(&user)
 	return res.RowsAffected, nil
 }
 
-func (r *userRepository) Update(ctx context.Context, user *User) (int64, error) {
+func (r *UserAdapter) Update(ctx context.Context, user *User) (int64, error) {
 	res := r.DB.Save(&user)
 	return res.RowsAffected, nil
 }
 
-func (r *userRepository) Patch(ctx context.Context, user map[string]interface{}) (int64, error) {
+func (r *UserAdapter) Patch(ctx context.Context, user map[string]interface{}) (int64, error) {
 	userType := reflect.TypeOf(User{})
 	jsonColumnMap := q.MakeJsonColumnMap(userType)
 	colMap := q.JSONToColumns(user, jsonColumnMap)
@@ -57,7 +57,7 @@ func (r *userRepository) Patch(ctx context.Context, user map[string]interface{})
 	return res.RowsAffected, nil
 }
 
-func (r *userRepository) Delete(ctx context.Context, id string) (int64, error) {
+func (r *UserAdapter) Delete(ctx context.Context, id string) (int64, error) {
 	var user User
 	res := r.DB.Where("id = ?", id).Delete(&user)
 	return res.RowsAffected, nil

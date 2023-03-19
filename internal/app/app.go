@@ -19,7 +19,7 @@ import (
 
 type ApplicationContext struct {
 	Health *health.Handler
-	User   UserHandler
+	User   UserPort
 }
 
 func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
@@ -39,7 +39,7 @@ func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	userRepository := NewUserRepository(ormDB)
+	userRepository := NewUserAdapter(ormDB)
 	userService := NewUserService(userRepository)
 	userHandler := NewUserHandler(userSearchBuilder.Search, userService, log.LogError)
 

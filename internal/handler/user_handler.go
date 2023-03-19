@@ -14,7 +14,7 @@ import (
 	. "go-service/internal/service"
 )
 
-type UserHandler interface {
+type UserPort interface {
 	Search(w http.ResponseWriter, r *http.Request)
 	All(w http.ResponseWriter, r *http.Request)
 	Load(w http.ResponseWriter, r *http.Request)
@@ -24,7 +24,7 @@ type UserHandler interface {
 	Delete(w http.ResponseWriter, r *http.Request)
 }
 
-func NewUserHandler(find func(context.Context, interface{}, interface{}, int64, ...int64) (int64, string, error), service UserService, logError func(context.Context, string, ...map[string]interface{})) UserHandler {
+func NewUserHandler(find func(context.Context, interface{}, interface{}, int64, ...int64) (int64, string, error), service UserService, logError func(context.Context, string, ...map[string]interface{})) UserPort {
 	filterType := reflect.TypeOf(UserFilter{})
 	modelType := reflect.TypeOf(User{})
 	searchHandler := search.NewSearchHandler(find, modelType, filterType, logError, nil)
