@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Route(r *mux.Router, ctx context.Context, conf Config) error {
+func Route(ctx context.Context, r *mux.Router, conf Config) error {
 	app, err := NewApp(ctx, conf)
 	if err != nil {
 		return err
